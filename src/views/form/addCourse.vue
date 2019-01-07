@@ -5,19 +5,19 @@
         <el-input v-model="form.name" style="width: 28%;"/>
       </el-form-item>
       <el-form-item label="开课时间">
-        <el-select v-model="form.year" placeholder="2018-2019" style="width: 13%;">
+        <el-select v-model="form.year" placeholder="" style="width: 13%;">
           <el-option label="2018-2019" value="y1"/>
           <el-option label="2019-2020" value="y2"/>
         </el-select>
         学年  第
-        <el-select v-model="form.term" placeholder="1" style="width: 6%;">
+        <el-select v-model="form.term" placeholder="" style="width: 6%;">
           <el-option label="1" value="t1"/>
           <el-option label="2" value="t2"/>
         </el-select> 学期
       </el-form-item>
       <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload"/>
-      <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
-        <el-table-column v-for="item of tableHeader" :prop="item" :label="item" :key="item"/>
+      <el-table :data="tableData" border highlight-current-row style="width: 80%;margin:20px auto;">
+        <el-table-column v-for="item of tableHeader" :prop="item" :label="item" :key="item" align="center"/>
       </el-table>
       <el-form-item>
         <center><el-button type="primary" style="margin-left: -150px; margin-right: 80px; margin-top: 40px" @click="onSubmit" >确认添加</el-button>
@@ -64,7 +64,29 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.dialogFormVisible = true
+      if (this.form.name === '') {
+        this.$message({
+          message: '课程名称不能为空！',
+          type: 'error'
+        })
+      } else if (this.form.term === '') {
+        this.$message({
+          message: '开课时间不能为空！',
+          type: 'error'
+        })
+      } else if (Object.keys(this.tableHeader).length === 0) {
+        this.$message({
+          message: '请导入学生名单后再创建课程！',
+          type: 'error'
+        })
+      } else if (Object.keys(this.tableHeader).length > 2 || this.tableHeader[0].trim !== '学号' || this.tableHeader[1].trim !== '姓名') {
+        this.$message({
+          message: '文件内容只能包含以“学号”和“姓名”为首行的两列！',
+          type: 'error'
+        })
+      } else {
+        this.dialogFormVisible = true
+      }
     },
     reSubmit() {
       this.dialogFormVisible = false
@@ -77,11 +99,11 @@ export default {
       this.dialogFormVisible2 = true
     },
     reCancel() {
-      this.form.name = '',
-      this.form.term = '',
-      this.form.year = '',
-      this.tableData = [],
-      this.tableHeader = [],
+      this.form.name = ''
+      this.form.term = ''
+      this.form.year = ''
+      this.tableData = []
+      this.tableHeader = []
       this.dialogFormVisible2 = false
     },
     beforeUpload(file) {
@@ -98,7 +120,11 @@ export default {
       return false
     },
     handleSuccess({ results, header }) {
-      this.tableData = results
+      console.log(results)
+      for (var i = 0; i < 10; i++) {
+        this.tableData[i] = results[i]
+      }
+      // this.tableData = results
       this.tableHeader = header
     }
   }

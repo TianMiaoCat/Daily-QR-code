@@ -1,8 +1,8 @@
 <template>
   <el-breadcrumb class="app-breadcrumb" separator="/">
     <transition-group name="breadcrumb">
-      <el-breadcrumb-item v-for="(item,index) in levelList" v-if="item.meta.title" :key="item.path">
-        <span v-if="item.redirect==='noredirect'||index==levelList.length-1" class="no-redirect">{{ item.meta.title }}</span>
+      <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
+        <span v-if="item.redirect==='noredirect'||index==levelList.length-2" class="no-redirect">{{ item.meta.title }}</span>
         <router-link v-else :to="item.path">{{ item.meta.title }}</router-link>
       </el-breadcrumb-item>
     </transition-group>
@@ -36,7 +36,7 @@ export default {
           item.path = toPath(params)
           return true
         }
-      }).map(v => ({ ...v, path: '/example/course2' }))
+      })
       const first = matched[0]
       if (first && first.name !== 'dashboard') {
         matched = [{ path: '/dashboard', meta: { title: '首页' }}].concat(matched)

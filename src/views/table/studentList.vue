@@ -8,7 +8,7 @@
       <el-input v-model="newStudent.newName" placeholder="新增学生姓名" style="width: 200px;" clearable class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-button type="primary" icon="el-icon-circle-plus-outline">新增</el-button>
       <router-link :to="'/example/course3/'">
-        <el-button v-waves class="filter-item" type="info" icon="el-icon-d-arrow-left" style="margin-left: 40px">返回</el-button>
+        <el-button class="filter-item" type="info" icon="el-icon-d-arrow-left" style="margin-left: 40px">返回</el-button>
       </router-link>
     </div>
 

@@ -68,7 +68,9 @@ export default {
         limit: 10,
         id: undefined,
         status: undefined
-      }
+      },
+      courseId: 0,
+      signId: 0
     }
   },
   created() {
@@ -76,6 +78,9 @@ export default {
   },
   methods: {
     getList() {
+      this.courseId = this.$route.query.course_id
+      this.signId = this.$route.query.sign_id
+      console.log(this.courseId, this.signId)
       this.listLoading = false
       fetchList(this.listQuery).then(response => {
         const items = response.data.items

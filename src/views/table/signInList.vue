@@ -36,13 +36,22 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <router-link :to="'/example/student/'">
+          <router-link :data="courseId" :to="{path: '/example/student/',query: {course_id:courseId, sign_id:scope.$index+1}}">
             <el-button type="success" size="small" icon="el-icon-circle-check-outline">查看详情</el-button>
           </router-link>
-          <el-button type="danger" size="small" icon="el-icon-error" >删除</el-button>
+          <el-button type="danger" size="small" icon="el-icon-error" @click="deleteRec(scope.index)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog :visible.sync="deleteDialog" title="修改提示" width="30%">
+      <span>确认删除该次签到记录吗？</span>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="deleteDialog = false">取消</el-button>
+        <el-button type="primary" @click="reCancel">确认</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -52,8 +61,11 @@ import { fetchList } from '@/api/table'
 export default {
   data() {
     return {
+      courseId: 0,
       list: null,
-      listLoading: true
+      listLoading: true,
+      deleteDialog: false,
+      signId: 0
     }
   },
   created() {
@@ -61,10 +73,25 @@ export default {
   },
   methods: {
     fetchData() {
+      this.courseId = this.$route.query.courseId
+      // console.log(this.courseId)
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchList().then(response => {
         this.list = response.data.items
         this.listLoading = false
+      })
+    },
+    deleteRec(id) {
+      this.deleteDialog = true
+      this.signId = id
+    },
+    reCancel() {
+      // 传给后端课程id-tempData，签到id-signId
+      this.deleteDialog = false
+      this.fetchData()
+      this.$message({
+        message: '删除成功！',
+        type: 'success'
       })
     }
   }
