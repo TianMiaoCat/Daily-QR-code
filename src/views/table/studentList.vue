@@ -1,18 +1,18 @@
 <template>
   <div class="app-container">
 
-    <div class="filter-container" style="margin-bottom:30px; margin-left:30px">
-      <el-input v-model="listQuery.id" placeholder="学生学号" style="width: 200px;" clearable class="filter-item" @keyup.enter.native="handleFilter"/>
+    <div class="filter-container" style="margin-bottom:40px; margin-left:30px; margin-top:20px">
+      <el-input v-model="searchId" placeholder="学生学号" style="width: 200px;" clearable class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-button type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <el-input v-model="newStudent.newId" placeholder="新增学生学号" style="width: 200px;" clearable class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-input v-model="newStudent.newName" placeholder="新增学生姓名" style="width: 200px;" clearable class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-button type="primary" icon="el-icon-circle-plus-outline">新增</el-button>
+      <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addStudent">新增</el-button>
       <router-link :data="courseId" :to="'/course/signHistory/' + courseId">
         <el-button class="filter-item" type="info" icon="el-icon-d-arrow-left" style="margin-left: 40px">返回</el-button>
       </router-link>
     </div>
 
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 75%; margin:auto">
+    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 64%; margin:auto">
 
       <el-table-column align="center" label="序号" width="100">
         <template slot-scope="scope">
@@ -32,13 +32,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="170">
+      <el-table-column align="center" label="操作" width="176">
         <template slot-scope="scope">
           <el-button type="danger" size="small" icon="el-icon-error" @click="deleteStu(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
 
     </el-table>
+
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
     <el-dialog :visible.sync="deleteDialog" title="修改提示" width="30%">
       <span>确认从名单中删除该学生吗？</span>
@@ -53,21 +55,24 @@
 
 <script>
 import { fetchList } from '@/api/table'
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'StudentList',
+  components: { Pagination },
   data() {
     return {
       list: null,
       listLoading: true,
+      total: 30,
       listQuery: {
         page: 1,
-        limit: 10,
-        id: undefined
+        limit: 10
       },
+      searchId: '',
       newStudent: {
-        newId: undefined,
-        newName: undefined
+        newId: '',
+        newName: ''
       },
       courseId: 0,
       studentId: 0,
@@ -82,30 +87,22 @@ export default {
       this.courseId = this.$route.params && this.$route.params.courseId
       this.listLoading = false
       fetchList(this.listQuery).then(response => {
-        const items = response.data.items
-        this.list = items.map(v => {
-          this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
-          v.originalTitle = v.title //  will be used when user click the cancel botton
-          return v
-        })
+        this.list = response.data.items
         this.listLoading = false
       })
     },
-    handleFilter() {
-      this.listQuery.page = 1
+    handleSizeChange(val) {
+      this.listQuery.limit = val
       this.getList()
     },
-    add(row) {
-      this.$message({
-        message: '补签成功',
-        type: 'success'
-      })
+    handleCurrentChange(val) {
+      this.listQuery.page = val
+      this.getList()
     },
-    reset(row) {
-      this.$message({
-        message: '重置成功',
-        type: 'success'
-      })
+    handleFilter() {
+      // 传给后端学生id-searchId
+      this.listQuery.page = 1
+      this.getList()
     },
     deleteStu(id) {
       this.deleteDialog = true
@@ -119,6 +116,23 @@ export default {
         message: '删除成功！',
         type: 'success'
       })
+    },
+    addStudent() {
+      if (this.newStudent.newId === '' || this.newStudent.newName === '') {
+        this.$message({
+          message: '学号姓名不能为空！',
+          type: 'error'
+        })
+      } else {
+        // 将学生id和姓名传给后端
+        this.getList()
+        this.$message({
+          message: '新增成功！',
+          type: 'success'
+        })
+        this.newStudent.newId = ''
+        this.newStudent.newName = ''
+      }
     }
   }
 }

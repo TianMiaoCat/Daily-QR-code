@@ -2,10 +2,9 @@
   <div class="app-container">
 
     <div class="filter-container" style="margin-bottom:30px; margin-left:30px">
-      <el-input v-model="listQuery.id" placeholder="学生学号" style="width: 200px;" clearable class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input v-model="listQuery.searchId" placeholder="学生学号" style="width: 200px;" clearable class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-select v-model="listQuery.status" placeholder="出勤状态" clearable class="filter-item" style="width: 130px">
-        <el-option label="published" value="Y"/>
-        <el-option label="deleted" value="N"/>
+        <el-option v-for="item in statusOptions" :label="item" :key="item" :value="item"/>
       </el-select>
       <el-button type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <router-link :data="courseId" :to="'/course/signHistory/' + courseId">
@@ -41,19 +40,23 @@
       </el-table-column>
 
     </el-table>
+
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+
   </div>
 </template>
 
 <script>
 import { fetchList } from '@/api/table'
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'StudentStatus',
+  components: { Pagination },
   filters: {
     statusFilter(status) {
       const statusMap = {
         published: 'success',
-        draft: 'info',
         deleted: 'danger'
       }
       return statusMap[status]
@@ -63,14 +66,16 @@ export default {
     return {
       list: null,
       listLoading: true,
+      total: 30,
       listQuery: {
         page: 1,
-        limit: 10,
-        id: undefined,
-        status: undefined
+        limit: 20,
+        searchId: '',
+        status: ''
       },
-      courseId: 0,
-      signId: 0
+      statusOptions: ['published', 'deleted'],
+      courseId: '',
+      signId: ''
     }
   },
   created() {
@@ -80,20 +85,23 @@ export default {
     getList() {
       this.courseId = this.$route.params && this.$route.params.courseId
       this.signId = this.$route.params && this.$route.params.signId
-      console.log(this.courseId, this.signId)
+      // console.log(this.courseId, this.signId)
       this.listLoading = false
       fetchList(this.listQuery).then(response => {
-        const items = response.data.items
-        this.list = items.map(v => {
-          this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
-          v.originalTitle = v.title //  will be used when user click the cancel botton
-          return v
-        })
+        this.list = response.data.items
         this.listLoading = false
       })
     },
     handleFilter() {
       this.listQuery.page = 1
+      this.getList()
+    },
+    handleSizeChange(val) {
+      this.listQuery.limit = val
+      this.getList()
+    },
+    handleCurrentChange(val) {
+      this.listQuery.page = val
       this.getList()
     },
     add(row) {

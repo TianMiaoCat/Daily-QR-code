@@ -10,7 +10,8 @@
         <span> {{ time }} </span>
       </div>
       <div class="progress-item">
-        <span>{{ year }} - {{ year + 1 }} 学年 第{{ num }}学期</span>
+        <span v-if="num==2">{{ year - 1 }} - {{ year }} 学年 第 {{ num }} 学期</span>
+        <span v-else>{{ year }} - {{ year + 1 }} 学年 第 {{ num }} 学期</span>
       </div>
       <div class="progress-item">
         <span>教师姓名：{{ name }}</span>
@@ -44,10 +45,6 @@ export default {
   },
   data() {
     return {
-      statisticsData: {
-        article_count: 1024,
-        pageviews_count: 1024
-      },
       time: null,
       year: null,
       num: null,
@@ -91,9 +88,11 @@ export default {
 </style>
 <style rel="stylesheet/scss" lang="scss" scoped>
 .box-card-component {
+  width: 300px;
   .box-card-header {
     position: relative;
     height: 220px;
+    width: 350px;
     img {
       width: 100%;
       height: 100%;
