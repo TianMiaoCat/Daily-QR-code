@@ -8,7 +8,7 @@
         <el-option label="deleted" value="N"/>
       </el-select>
       <el-button type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <router-link :to="'/example/course3/'">
+      <router-link :data="courseId" :to="'/course/signHistory/' + courseId">
         <el-button type="info" icon="el-icon-d-arrow-left">返回</el-button>
       </router-link>
     </div>
@@ -78,8 +78,8 @@ export default {
   },
   methods: {
     getList() {
-      this.courseId = this.$route.query.course_id
-      this.signId = this.$route.query.sign_id
+      this.courseId = this.$route.params && this.$route.params.courseId
+      this.signId = this.$route.params && this.$route.params.signId
       console.log(this.courseId, this.signId)
       this.listLoading = false
       fetchList(this.listQuery).then(response => {

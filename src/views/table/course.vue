@@ -28,7 +28,7 @@
 
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <router-link :to="{path: '/example/course3/', query: {courseId:scope.row.id}}">
+          <router-link :to="'/course/signHistory/' + scope.row.id">
             <el-button type="success" size="small" icon="el-icon-circle-check-outline">查看历史</el-button>
           </router-link>
           <el-button type="primary" size="small" icon="el-icon-edit" @click="handleUpdate(scope.row.id)">签到</el-button>

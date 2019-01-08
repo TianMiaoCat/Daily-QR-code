@@ -39,12 +39,12 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/form',
+    path: '/teacher',
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: 'Form',
+        path: 'teacherInfo',
+        name: 'Teacher',
         component: () => import('@/views/form/teacherInfo'),
         meta: { title: '教师信息', icon: 'form' }
       }
@@ -52,40 +52,40 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/example',
+    path: '/course',
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
     meta: { title: '课程信息', icon: 'example' },
     children: [
       {
-        path: 'course1',
+        path: 'courseAdd',
         name: 'Course1',
         component: () => import('@/views/form/addCourse'),
         meta: { title: '添加课程', icon: 'table' }
       },
       {
-        path: 'course2',
+        path: 'courseAll',
         name: 'Course2',
         component: () => import('@/views/table/course'),
         meta: { title: '当前课程', icon: 'tree' }
       },
       {
-        path: 'course3',
+        path: 'signHistory/:id',
         name: 'Course3',
         component: () => import('@/views/table/signInList'),
         meta: { title: '签到历史', icon: 'tree' },
         hidden: true
       },
       {
-        path: 'student',
-        name: 'student',
+        path: 'student/:courseId/:signId',
+        name: 'Student',
         component: () => import('@/views/table/studentStatus'),
         meta: { title: '学生出勤', icon: 'tree' },
         hidden: true
       },
       {
-        path: 'student1',
+        path: 'studentList/:courseId',
         name: 'student1',
         component: () => import('@/views/table/studentList'),
         meta: { title: '学生名单', icon: 'tree' },

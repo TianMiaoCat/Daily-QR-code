@@ -7,7 +7,7 @@
       <el-input v-model="newStudent.newId" placeholder="新增学生学号" style="width: 200px;" clearable class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-input v-model="newStudent.newName" placeholder="新增学生姓名" style="width: 200px;" clearable class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-button type="primary" icon="el-icon-circle-plus-outline">新增</el-button>
-      <router-link :to="'/example/course3/'">
+      <router-link :data="courseId" :to="'/course/signHistory/' + courseId">
         <el-button class="filter-item" type="info" icon="el-icon-d-arrow-left" style="margin-left: 40px">返回</el-button>
       </router-link>
     </div>
@@ -34,11 +34,20 @@
 
       <el-table-column align="center" label="操作" width="170">
         <template slot-scope="scope">
-          <el-button type="danger" size="small" icon="el-icon-error">删除</el-button>
+          <el-button type="danger" size="small" icon="el-icon-error" @click="deleteStu(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
 
     </el-table>
+
+    <el-dialog :visible.sync="deleteDialog" title="修改提示" width="30%">
+      <span>确认从名单中删除该学生吗？</span>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="deleteDialog = false">取消</el-button>
+        <el-button type="primary" @click="reCancel">确认</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -59,7 +68,10 @@ export default {
       newStudent: {
         newId: undefined,
         newName: undefined
-      }
+      },
+      courseId: 0,
+      studentId: 0,
+      deleteDialog: false
     }
   },
   created() {
@@ -67,6 +79,7 @@ export default {
   },
   methods: {
     getList() {
+      this.courseId = this.$route.params && this.$route.params.courseId
       this.listLoading = false
       fetchList(this.listQuery).then(response => {
         const items = response.data.items
@@ -91,6 +104,19 @@ export default {
     reset(row) {
       this.$message({
         message: '重置成功',
+        type: 'success'
+      })
+    },
+    deleteStu(id) {
+      this.deleteDialog = true
+      this.studentId = id
+    },
+    reCancel() {
+      // 传给后端课程id-courseId，学生id-studentId
+      this.deleteDialog = false
+      this.getList()
+      this.$message({
+        message: '删除成功！',
         type: 'success'
       })
     }

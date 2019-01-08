@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="button" style="margin-bottom:20px">
-      <router-link :to="'/example/student1/'">
+      <router-link :data="courseId" :to="'/course/studentList/' + courseId">
         <el-button type="primary" size="small" icon="el-icon-document">当前学生名单</el-button>
       </router-link>
       <el-button type="primary" size="small" icon="el-icon-download">导出签到表</el-button>
@@ -36,10 +36,10 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <router-link :data="courseId" :to="{path: '/example/student/',query: {course_id:courseId, sign_id:scope.$index+1}}">
+          <router-link :data="courseId" :to="'/course/student/' + courseId + '/' + scope.$index">
             <el-button type="success" size="small" icon="el-icon-circle-check-outline">查看详情</el-button>
           </router-link>
-          <el-button type="danger" size="small" icon="el-icon-error" @click="deleteRec(scope.index)">删除</el-button>
+          <el-button type="danger" size="small" icon="el-icon-error" @click="deleteRec(scope.$index)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     fetchData() {
-      this.courseId = this.$route.query.courseId
+      this.courseId = this.$route.params && this.$route.params.id
       // console.log(this.courseId)
       this.listLoading = true
       fetchList().then(response => {
