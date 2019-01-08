@@ -5,8 +5,8 @@ const user = {
   state: {
     token: '',
     name: '',
-    avatar: '',
-    roles: []
+    userId: '',
+    avatar: ''
   },
 
   mutations: {
@@ -20,8 +20,8 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
+    SET_ROLES: (state, userId) => {
+      state.userId = userId
     }
   },
 
@@ -33,7 +33,7 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
           const data = response.data
-          console.log(data)
+          // console.log(data.name)
           commit('SET_NAME', data.name)
           commit('SET_TOKEN', data.token)
           setToken(data.token)

@@ -7,19 +7,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import BoxCard from './components/BoxCard'
 
 export default {
   name: 'Dashboard',
   components: {
     BoxCard
-  },
-  computed: {
-    ...mapGetters([
-      'name',
-      'roles'
-    ])
   }
 }
 </script>

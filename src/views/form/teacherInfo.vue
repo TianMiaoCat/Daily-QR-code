@@ -39,7 +39,7 @@
 
 <script>
 
-import { getInfo, submitInfo } from '@/api/teacherInfo'
+// import { getInfo, submitInfo } from '@/api/teacherInfo'
 
 export default {
   data() {
@@ -64,7 +64,11 @@ export default {
   },
   methods: {
     get() {
-
+      // getInfo(this.$store.getters.token).then(response => {
+      //   this.form.name = response.data.name
+      //   this.form.phone = response.data.phone
+      //   this.form.address = response.data.address
+      // })
     },
     onSubmit() {
       if (this.form.name === this.temp.name && this.form.phone === this.temp.phone && this.form.address === this.temp.address && this.form.newPassword === '') {
@@ -81,7 +85,7 @@ export default {
     },
     reSubmit() {
       this.dialogFormVisible = false
-      submitInfo(this.form)
+      // submitInfo(this.form)
       this.$message('修改成功!')
     }
   }

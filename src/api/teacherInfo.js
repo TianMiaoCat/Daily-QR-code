@@ -1,23 +1,18 @@
 import request from '@/utils/request'
 
-export function getInfo() {
+export function getInfo(token) {
   return request({
-    url: '',
+    url: '/table/list',
     method: 'get',
-    params: { }
+    params: { token }
   })
 }
 
-export function submitInfo(name, phone, address, newPassword) {
+export function submitInfo(form) {
   return request({
-    url: '',
+    url: '/table/list',
     method: 'post',
-    data: {
-      name,
-      phone,
-      address,
-      newPassword
-    }
+    data: { form }
   })
 }
 

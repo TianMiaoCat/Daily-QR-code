@@ -28,6 +28,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+// import { getInfo } from '@/api/teacherInfo'
 import PanThumb from '@/components/PanThumb'
 import Mallki from '@/components/TextHoverEffect/Mallki'
 
@@ -74,6 +75,12 @@ export default {
       } else {
         this.num = 2
       }
+      // console.log(this.$store.getters.token) 取出token
+      // getInfo(this.$store.getters.token).then(response => {
+      //   this.name = response.data.name
+      //   this.phone = response.data.phone
+      //   this.address = response.data.address
+      // })
     }
   }
 }
