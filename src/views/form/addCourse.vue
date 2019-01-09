@@ -46,6 +46,7 @@
 
 <script>
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
+// import { submitInfo, submitExcel} from '@/api/newCourse.js'
 
 export default {
   components: { UploadExcelComponent },
@@ -79,7 +80,7 @@ export default {
           message: '请导入学生名单后再创建课程！',
           type: 'error'
         })
-      } else if (Object.keys(this.tableHeader).length > 2 || this.tableHeader[0].trim !== '学号' || this.tableHeader[1].trim !== '姓名') {
+      } else if (Object.keys(this.tableHeader).length !== 2 || this.tableHeader[0].trim() !== '学号' || this.tableHeader[1].trim() !== '姓名') {
         this.$message({
           message: '文件内容只能包含以“学号”和“姓名”为首行的两列！',
           type: 'error'
@@ -90,6 +91,8 @@ export default {
     },
     reSubmit() {
       this.dialogFormVisible = false
+      // submitInfo(this.form)
+      // submitExcel(this.tableData)
       this.$message({
         message: '提交成功！',
         type: 'success'
@@ -114,13 +117,13 @@ export default {
       }
 
       this.$message({
-        message: 'Please do not upload files larger than 1m in size.',
+        message: '文件大小不能超过1M.',
         type: 'warning'
       })
       return false
     },
     handleSuccess({ results, header }) {
-      console.log(results)
+      // console.log(JSON.parse(JSON.stringify(results)))
       for (var i = 0; i < 10; i++) {
         this.tableData[i] = results[i]
       }

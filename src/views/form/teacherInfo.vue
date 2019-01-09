@@ -68,6 +68,7 @@ export default {
       //   this.form.name = response.data.name
       //   this.form.phone = response.data.phone
       //   this.form.address = response.data.address
+      //   this.temp = response.data
       // })
     },
     onSubmit() {
@@ -85,6 +86,8 @@ export default {
     },
     reSubmit() {
       this.dialogFormVisible = false
+      // console.log(JSON.parse(JSON.stringify(this.form)))
+      // console.log(this.form)
       // submitInfo(this.form)
       this.$message('修改成功!')
     }
