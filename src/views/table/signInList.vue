@@ -4,7 +4,7 @@
       <router-link :data="courseId" :to="'/course/studentList/' + courseId">
         <el-button type="primary" size="small" icon="el-icon-document">当前学生名单</el-button>
       </router-link>
-      <el-button type="primary" size="small" icon="el-icon-download">导出签到表</el-button>
+      <el-button type="primary" size="small" icon="el-icon-download" @click="handleDownload">导出签到表</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -65,7 +65,11 @@ export default {
       list: null,
       listLoading: true,
       deleteDialog: false,
-      signId: 0
+      signId: 0,
+      downloadLoading: false,
+      filename: '签到表',
+      autoWidth: true,
+      bookType: 'xlsx'
     }
   },
   created() {
@@ -93,6 +97,28 @@ export default {
         message: '删除成功！',
         type: 'success'
       })
+    },
+    handleDownload() {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['学号', '姓名', '出勤次数']
+        const filterVal = ['id', 'author', 'pageviews']
+        const list = this.list
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename,
+          autoWidth: this.autoWidth,
+          bookType: this.bookType
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        return v[j]
+      }))
     }
   }
 }
