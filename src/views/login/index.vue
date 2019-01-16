@@ -7,7 +7,7 @@
           <span class="svg-container">
             <svg-icon icon-class="user" />
           </span>
-          <el-input v-model="loginForm.username" name="username" type="text" auto-complete="on" placeholder="username" />
+          <el-input v-model="loginForm.username" name="username" type="text" auto-complete="on" placeholder="请输入教师工号" />
         </el-form-item>
         <el-form-item prop="password">
           <span class="svg-container">
@@ -18,7 +18,7 @@
             v-model="loginForm.password"
             name="password"
             auto-complete="on"
-            placeholder="password"
+            placeholder="请输入密码"
             @keyup.enter.native="handleLogin" />
           <span class="show-pwd" @click="showPwd">
             <svg-icon icon-class="eye" />
@@ -84,27 +84,29 @@
 
 <script>
 
+import { isNumber } from '@/utils/validate'
+
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('账号不能小于5位'))
+      if (!isNumber(value)) {
+        callback(new Error('请输入正确的10位工号'))
       } else {
         callback()
       }
     }
     const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('密码不能小于5位'))
+      if (value.length < 10) {
+        callback(new Error('密码不能小于10位'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: 'admin'
+        username: '',
+        password: ''
       },
       signUpForm: {
         newUsername: '',

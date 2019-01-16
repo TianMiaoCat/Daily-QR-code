@@ -1,5 +1,6 @@
 import { login, signup, logout, getInfo } from '@/api/login'
 import { setToken, removeToken } from '@/utils/auth'
+import { Message } from 'element-ui'
 
 const user = {
   state: {
@@ -33,12 +34,17 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
           const data = response.data
-          // console.log(data.name)
+          console.log(response)
           commit('SET_NAME', data.name)
           commit('SET_TOKEN', data.token)
           setToken(data.token)
           resolve(response)
         }).catch(error => {
+          Message({
+            message: '账号或密码错误！',
+            type: 'error',
+            duration: 1 * 1000
+          })
           reject(error)
           console.log('error! ')
         })
@@ -57,8 +63,13 @@ const user = {
           setToken(data.token)
           resolve(response)
         }).catch(error => {
+          Message({
+            message: '账号已被注册！',
+            type: 'error',
+            duration: 2 * 1000
+          })
           reject(error)
-          console.log('error! ')
+          console.log(error)
         })
       })
     },

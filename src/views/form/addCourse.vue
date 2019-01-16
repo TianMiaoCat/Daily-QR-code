@@ -6,13 +6,13 @@
       </el-form-item>
       <el-form-item label="开课时间">
         <el-select v-model="form.year" placeholder="" style="width: 13%;">
-          <el-option label="2018-2019" value="y1"/>
-          <el-option label="2019-2020" value="y2"/>
+          <el-option label="2018-2019" value="2018-2019"/>
+          <el-option label="2019-2020" value="2019-2020"/>
         </el-select>
         学年  第
         <el-select v-model="form.term" placeholder="" style="width: 6%;">
-          <el-option label="1" value="t1"/>
-          <el-option label="2" value="t2"/>
+          <el-option label="1" value="1"/>
+          <el-option label="2" value="2"/>
         </el-select> 学期
       </el-form-item>
       <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload"/>
@@ -91,6 +91,8 @@ export default {
     },
     reSubmit() {
       this.dialogFormVisible = false
+      console.log(JSON.parse(JSON.stringify(this.form)))
+      console.log(JSON.parse(JSON.stringify(this.tableData)))
       // submitInfo(this.form)
       // submitExcel(this.tableData)
       this.$message({
@@ -123,7 +125,7 @@ export default {
       return false
     },
     handleSuccess({ results, header }) {
-      // console.log(JSON.parse(JSON.stringify(results)))
+      console.log(JSON.parse(JSON.stringify(results)))
       for (var i = 0; i < 10; i++) {
         this.tableData[i] = results[i]
       }
