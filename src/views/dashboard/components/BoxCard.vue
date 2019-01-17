@@ -75,6 +75,7 @@ export default {
       } else {
         this.num = 2
       }
+      console.log(this.$store.getters.name)
       getInfo().then(response => {
         // console.log(response.data)
         this.name = response.data.name

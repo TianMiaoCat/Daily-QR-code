@@ -93,9 +93,10 @@ const user = {
     // },
 
     // 登出
-    LogOut({ commit, state }) {
+    LogOut({ commit }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        logout().then(() => {
+          console.log('logout!')
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           removeToken()
