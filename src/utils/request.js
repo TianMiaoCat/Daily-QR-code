@@ -16,22 +16,22 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   config => {
-    // console.log(getToken())
     var str = config.url + ''
-    // console.log(str.search('addstudents'))
+    // if (config.method === 'post') {
+    //   // config.headers['token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+    //   // config.data = JSON.stringify(config.data)
+    //   // console.log(config.url)
+    //   config.data = qs.stringify(config.data)
+    //   // console.log('there')
+    // }
     if (str.search('addstudents') !== -1) {
       config.headers = {
         'Content-Type': 'application/json; charset=utf-8;'
       }
-      config.data = JSON.stringify(config.data['list'])
-      console.log(config.data)
-    }
-    if (config.method === 'post') {
-      // config.headers['token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
-      // config.data = JSON.stringify(config.data)
-      // console.log(config.url)
+      // console.log(config.data)
+      // config.data = JSON.parse(config.data)
+    } else {
       config.data = qs.stringify(config.data)
-      // console.log('there')
     }
     return config
   },

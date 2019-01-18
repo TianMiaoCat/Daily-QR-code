@@ -2,7 +2,7 @@
   <div>
     <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls" @change="handleClick">
     <div class="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
-      导入学生名单
+      导入学生名单12
       <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" @click="handleUpload">选择文件</el-button>
       <span style="font-size: 12px">预览10条信息</span>
     </div>
@@ -21,8 +21,8 @@ export default {
     return {
       loading: false,
       excelData: {
-        header: [],
-        results: []
+        header: null,
+        results: null
       }
     }
   },

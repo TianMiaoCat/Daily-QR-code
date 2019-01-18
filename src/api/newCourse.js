@@ -12,10 +12,12 @@ export function submitInfo(name, academicyear, semester) {
   })
 }
 
-export function submitExcel(id, list) {
+export function submitExcel(courseid, list) {
   return request({
-    url: '/admin/course/addstudents?courseid= ' + id + ' ',
+    url: '/admin/course/addstudents',
     method: 'post',
-    data: { list }
+    dataType: 'json',
+    params: { courseid },
+    data: list
   })
 }

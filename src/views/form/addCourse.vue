@@ -150,20 +150,22 @@ export default {
       return false
     },
     handleSuccess({ results, header }) {
-      // console.log(JSON.parse(JSON.stringify(results)))
-      this.student = JSON.parse(JSON.stringify(results))
-      for (var i = 0; i < this.student.length; i++) {
-        this.student[i]['studentid'] = this.student[i]['学号']
-        delete this.student[i]['学号']
-        this.student[i]['studentid'] = this.student[i]['studentid'] + ''
-        this.student[i]['name'] = this.student[i]['姓名']
-        delete this.student[i]['姓名']
-      }
-      // console.log(JSON.stringify(this.student))
-      // this.student = JSON.stringify(this.student)
+      // // console.log(JSON.parse(JSON.stringify(results)))
       for (var j = 0; j < 10; j++) {
         this.tableData[j] = results[j]
       }
+      results = JSON.parse(JSON.stringify(results))
+      for (var i = 0; i < results.length; i++) {
+        results[i]['studentid'] = results[i]['学号']
+        delete results[i]['学号']
+        results[i]['studentid'] = results[i]['studentid'] + ''
+        results[i]['name'] = results[i]['姓名']
+        delete results[i]['姓名']
+      }
+      this.student = results
+      console.log(this.student)
+      // console.log(JSON.stringify(this.student))
+      // this.student = JSON.stringify(this.student)
       this.tableHeader = header
     }
   }
