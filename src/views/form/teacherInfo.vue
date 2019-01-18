@@ -39,7 +39,8 @@
 
 <script>
 
-// import { getInfo, submitInfo } from '@/api/teacherInfo'
+import { getInfo, submitInfo, submitInfoNo } from '@/api/teacherInfo'
+import { Message } from 'element-ui'
 
 export default {
   data() {
@@ -48,7 +49,7 @@ export default {
         name: '',
         phone: '',
         address: '',
-        newPassword: ''
+        newPassword: null
       },
       temp: {
         name: '',
@@ -64,22 +65,24 @@ export default {
   },
   methods: {
     get() {
-      // getInfo(this.$store.getters.token).then(response => {
-      //   this.form.name = response.data.name
-      //   this.form.phone = response.data.phone
-      //   this.form.address = response.data.address
-      //   this.temp = response.data
-      // })
+      getInfo().then(response => {
+        this.form.name = response.data.name
+        this.form.phone = response.data.phonenum
+        this.form.address = response.data.address
+        this.temp.name = response.data.name
+        this.temp.phone = response.data.phonenum
+        this.temp.address = response.data.address
+      })
     },
     onSubmit() {
-      if (this.form.name === this.temp.name && this.form.phone === this.temp.phone && this.form.address === this.temp.address && this.form.newPassword === '') {
+      if (this.form.name === this.temp.name && this.form.phone === this.temp.phone && this.form.address === this.temp.address && this.form.newPassword === null) {
         this.dialogFormVisible2 = true
       } else {
         this.dialogFormVisible = true
       }
     },
     onCancel() {
-      this.form.newPassword = ''
+      this.form.newPassword = null
       this.form.name = this.temp.name
       this.form.phone = this.temp.phone
       this.form.address = this.temp.address
@@ -88,8 +91,31 @@ export default {
       this.dialogFormVisible = false
       // console.log(JSON.parse(JSON.stringify(this.form)))
       // console.log(this.form)
-      // submitInfo(this.form)
-      this.$message('修改成功!')
+      if (this.form.newPassword !== null) {
+        submitInfo(this.form.name, this.form.newPassword, this.form.phone, this.form.address).then(response => {
+          if (response.data.name) {
+            this.$message('修改成功！请重新登录')
+            this.$store.dispatch('LogOut').then(() => {
+              location.reload() // 为了重新实例化vue-router对象 避免bug
+            })
+          }
+        }).catch(error => {
+          Message({
+            message: '修改失败！密码不能少于10位',
+            type: 'error',
+            duration: 1 * 1000
+          })
+          console.log(error)
+          this.onCancel()
+        })
+      } else {
+        submitInfoNo(this.form.name, this.form.phone, this.form.address).then(response => {
+          if (response.data.name) {
+            this.$message('修改成功！')
+            this.get()
+          }
+        })
+      }
     }
   }
 }

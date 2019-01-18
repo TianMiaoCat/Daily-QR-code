@@ -5,7 +5,7 @@
         <slot/>
       </div>
     </div>
-    <img :src="image" class="pan-thumb">
+    <img src="@/assets/logo.jpg" class="pan-thumb">
   </div>
 </template>
 

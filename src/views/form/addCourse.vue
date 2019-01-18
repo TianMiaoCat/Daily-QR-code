@@ -46,7 +46,8 @@
 
 <script>
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
-// import { submitInfo, submitExcel} from '@/api/newCourse.js'
+import { submitInfo, submitExcel } from '@/api/newCourse.js'
+import { Message } from 'element-ui'
 
 export default {
   components: { UploadExcelComponent },
@@ -59,8 +60,11 @@ export default {
       },
       tableData: [],
       tableHeader: [],
+      header: [],
+      student: [],
       dialogFormVisible: false,
-      dialogFormVisible2: false
+      dialogFormVisible2: false,
+      courseid: null
     }
   },
   methods: {
@@ -91,13 +95,34 @@ export default {
     },
     reSubmit() {
       this.dialogFormVisible = false
-      console.log(JSON.parse(JSON.stringify(this.form)))
-      console.log(JSON.parse(JSON.stringify(this.tableData)))
-      // submitInfo(this.form)
-      // submitExcel(this.tableData)
-      this.$message({
-        message: '提交成功！',
-        type: 'success'
+      // console.log(JSON.parse(JSON.stringify(this.form)))
+      // console.log(JSON.parse(JSON.stringify(this.tableData)))
+      submitInfo(this.form.name, this.form.year, this.form.term).then(response => {
+        if (response.data.courseid) {
+          this.courseid = response.data.courseid
+          submitExcel(this.courseid, this.student).then(response => {
+            if (response.data) {
+              this.$message({
+                message: '添加课程成功!',
+                type: 'seccess'
+              })
+            }
+          }).catch(error => {
+            Message({
+              message: '添加失败！',
+              type: 'error',
+              duration: 1 * 1000
+            })
+            console.log(error)
+          })
+        }
+      }).catch(error => {
+        Message({
+          message: '添加失败！',
+          type: 'error',
+          duration: 1 * 1000
+        })
+        console.log(error)
       })
     },
     onCancel() {
@@ -125,11 +150,20 @@ export default {
       return false
     },
     handleSuccess({ results, header }) {
-      console.log(JSON.parse(JSON.stringify(results)))
-      for (var i = 0; i < 10; i++) {
-        this.tableData[i] = results[i]
+      // console.log(JSON.parse(JSON.stringify(results)))
+      this.student = JSON.parse(JSON.stringify(results))
+      for (var i = 0; i < this.student.length; i++) {
+        this.student[i]['studentid'] = this.student[i]['学号']
+        delete this.student[i]['学号']
+        this.student[i]['studentid'] = this.student[i]['studentid'] + ''
+        this.student[i]['name'] = this.student[i]['姓名']
+        delete this.student[i]['姓名']
       }
-      // this.tableData = results
+      // console.log(JSON.stringify(this.student))
+      // this.student = JSON.stringify(this.student)
+      for (var j = 0; j < 10; j++) {
+        this.tableData[j] = results[j]
+      }
       this.tableHeader = header
     }
   }

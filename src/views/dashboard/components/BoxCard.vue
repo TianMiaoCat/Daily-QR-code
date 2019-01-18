@@ -4,7 +4,7 @@
       <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1545990637008&di=7892ed83ea27fc15e96f3599c0f91a8f&imgtype=0&src=http%3A%2F%2Fimglf2.ph.126.net%2FKEw-Zu5Qml9UiMFtrhRVrQ%3D%3D%2F6598102208076291452.jpg">
     </div>
     <div style="position:relative;">
-      <pan-thumb :image="avatar" class="panThumb"/>
+      <pan-thumb image src="@/assets/logo.jpg" class="panThumb"/>
       <mallki class-name="mallki-text" text="vue-element-admin"/>
       <div style="padding-top:35px;" class="progress-item">
         <span> {{ time }} </span>

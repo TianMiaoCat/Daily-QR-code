@@ -194,6 +194,9 @@ export default {
             })
             this.loginForm.username = ''
             this.loginForm.password = ''
+            this.signUpForm.newUsername = ''
+            this.signUpForm.newPassword = ''
+            this.signUpForm.againPassword = ''
             setTimeout(function() {
               this.showRegister = false
               this.showLogin = true
@@ -201,6 +204,9 @@ export default {
             }.bind(this), 1000)
           }).catch(() => {
             this.loading = false
+            this.signUpForm.newUsername = ''
+            this.signUpForm.newPassword = ''
+            this.signUpForm.againPassword = ''
           })
         } else {
           console.log('error submit!!')

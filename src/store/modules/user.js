@@ -56,7 +56,7 @@ const user = {
       return new Promise((resolve, reject) => {
         signup(username, userInfo.newPassword).then(response => {
           const data = response.data
-          console.log(data)
+          // console.log(data)
           commit('SET_NAME', data.name)
           commit('SET_TOKEN', data.token)
           setToken(data.token)

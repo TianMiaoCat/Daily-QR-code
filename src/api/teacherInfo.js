@@ -7,11 +7,27 @@ export function getInfo() {
   })
 }
 
-export function submitInfo(form) {
+export function submitInfo(name, password, phonenum, address) {
   return request({
-    url: '/table/list',
+    url: '/admin/user/changeinfo',
     method: 'post',
-    data: { form }
+    data: {
+      name,
+      password,
+      phonenum,
+      address
+    }
   })
 }
 
+export function submitInfoNo(name, phonenum, address) {
+  return request({
+    url: '/admin/user/changeinfo',
+    method: 'post',
+    data: {
+      name,
+      phonenum,
+      address
+    }
+  })
+}

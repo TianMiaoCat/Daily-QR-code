@@ -21,8 +21,8 @@ export default {
     return {
       loading: false,
       excelData: {
-        header: null,
-        results: null
+        header: [],
+        results: []
       }
     }
   },
@@ -87,8 +87,11 @@ export default {
           const workbook = XLSX.read(btoa(fixedData), { type: 'base64' })
           const firstSheetName = workbook.SheetNames[0]
           const worksheet = workbook.Sheets[firstSheetName]
+          // console.log(worksheet)
           const header = this.getHeaderRow(worksheet)
+          // console.log(header)
           const results = XLSX.utils.sheet_to_json(worksheet)
+          // console.log(results)
           this.generateData({ header, results })
           this.loading = false
           resolve()

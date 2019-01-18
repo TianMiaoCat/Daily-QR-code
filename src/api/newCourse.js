@@ -1,17 +1,21 @@
 import request from '@/utils/request'
 
-export function submitInfo(form) {
-    return request({
-      url: '/table/list',
-      method: 'post',
-      data: { form }
-    })
-  }
+export function submitInfo(name, academicyear, semester) {
+  return request({
+    url: '/admin/course/addcourse',
+    method: 'get',
+    params: {
+      name,
+      academicyear,
+      semester
+    }
+  })
+}
 
-export function submitExcel(list) {
-    return request({
-        url: '',
-        method: 'post',
-        data: { list }
-    })
+export function submitExcel(id, list) {
+  return request({
+    url: '/admin/course/addstudents?courseid= ' + id + ' ',
+    method: 'post',
+    data: { list }
+  })
 }

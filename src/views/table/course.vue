@@ -4,19 +4,19 @@
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="课程编号" width="190">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.courseid }}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="210px" align="center" label="开课时间">
         <template slot-scope="scope">
-          <span>{{ scope.row.display_time }}</span>
+          <span>{{ scope.row.academicyear }}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="230px" align="center" label="课程名称">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
 
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/table'
+import { getCourse } from '@/api/course'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -98,9 +98,9 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        // this.total = response.data.total
+      getCourse(this.listQuery.page, this.listQuery.limit).then(response => {
+        this.list = response.data.courses
+        this.total = response.data.total
         this.listLoading = false
       })
     },
