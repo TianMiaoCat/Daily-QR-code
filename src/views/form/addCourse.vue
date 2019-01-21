@@ -115,6 +115,11 @@ export default {
             })
             console.log(error)
           })
+        } else {
+          this.$message({
+            message: '添加失败！',
+            type: 'error'
+          })
         }
       }).catch(error => {
         Message({
