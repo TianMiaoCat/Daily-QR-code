@@ -106,6 +106,7 @@ export default {
                 message: '添加课程成功!',
                 type: 'seccess'
               })
+              this.reCancel()
             }
           }).catch(error => {
             Message({

@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/table'
+import { getSign } from '@/api/course'
 
 export default {
   data() {
@@ -78,10 +78,10 @@ export default {
   methods: {
     fetchData() {
       this.courseId = this.$route.params && this.$route.params.id
-      // console.log(this.courseId)
+      console.log(this.courseId)
       this.listLoading = true
-      fetchList().then(response => {
-        this.list = response.data.items
+      getSign(this.courseId).then(response => {
+        this.list = response.data
         this.listLoading = false
       })
     },

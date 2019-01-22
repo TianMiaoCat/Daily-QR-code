@@ -2,15 +2,15 @@
   <div class="app-container">
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column align="center" label="课程编号" width="190">
+      <el-table-column align="center" label="课程编号" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.courseid }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="210px" align="center" label="开课时间">
+      <el-table-column width="250px" align="center" label="开课时间">
         <template slot-scope="scope">
-          <span>{{ scope.row.academicyear }}</span>
+          <span>{{ scope.row.academicyear }}学年第{{ scope.row.semester }}学期</span>
         </template>
       </el-table-column>
 
@@ -20,19 +20,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" min-width="30px" label="学生人数">
-        <template slot-scope="scope">
-          <span>{{ scope.row.pageviews }}</span>
-        </template>
-      </el-table-column>
-
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <router-link :to="'/course/signHistory/' + scope.row.id">
+          <router-link :to="'/course/signHistory/' + scope.row.courseid">
             <el-button type="success" size="small" icon="el-icon-circle-check-outline">查看历史</el-button>
           </router-link>
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="handleUpdate(scope.row.id)">签到</el-button>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteCourse(scope.row.id)">删除</el-button>
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="handleUpdate(scope.row.courseid)">签到</el-button>
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteCourse(scope.row.courseid)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -66,8 +60,9 @@
 </template>
 
 <script>
-import { getCourse } from '@/api/course'
+import { getCourse, deleteCourse } from '@/api/course'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { Message } from 'element-ui'
 
 export default {
   name: 'CourseList',
@@ -123,12 +118,22 @@ export default {
       this.tempData = id
     },
     reCancel() {
-      // 传给后端id-tempData
       this.deleteDialog = false
-      this.getList()
-      this.$message({
-        message: '删除成功！',
-        type: 'success'
+      deleteCourse(this.tempData).then(response => {
+        if (response.data) {
+          this.getList()
+          this.$message({
+            message: '删除成功！',
+            type: 'success'
+          })
+        }
+      }).catch(error => {
+        Message({
+          message: '删除失败！',
+          type: 'error',
+          duration: 1 * 1000
+        })
+        console.log(error)
       })
     }
   }
