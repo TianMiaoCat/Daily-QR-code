@@ -97,6 +97,13 @@ export default {
         this.list = response.data.courses
         this.total = response.data.total
         this.listLoading = false
+      }).catch(error => {
+        Message({
+          message: '获取课程失败！',
+          type: 'error',
+          duration: 1 * 1000
+        })
+        console.log(error)
       })
     },
     handleSizeChange(val) {
@@ -122,9 +129,10 @@ export default {
       deleteCourse(this.tempData).then(response => {
         if (response.data) {
           this.getList()
-          this.$message({
+          Message({
             message: '删除成功！',
-            type: 'success'
+            type: 'success',
+            duration: 1 * 1000
           })
         }
       }).catch(error => {

@@ -57,6 +57,8 @@
 
 <script>
 import { getSign } from '@/api/course'
+import { getRecord } from '@/api/signup'
+import { Message } from 'element-ui'
 
 export default {
   data() {
@@ -83,6 +85,13 @@ export default {
       getSign(this.courseId).then(response => {
         this.list = response.data
         this.listLoading = false
+      }).catch(error => {
+        Message({
+          message: '获取签到记录失败！',
+          type: 'error',
+          duration: 1 * 1000
+        })
+        console.log(error)
       })
     },
     deleteRec(id) {
@@ -102,7 +111,18 @@ export default {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
         const tHeader = ['学号', '姓名', '出勤次数']
-        const filterVal = ['id', 'author', 'pageviews']
+        const filterVal = ['studentid', 'studentname', 'signintime']
+        getRecord(this.courseId).then(response => {
+          this.list = response.data.studentSigninInfos
+          this.listLoading = false
+        }).catch(error => {
+          Message({
+            message: '获取签到记录失败！',
+            type: 'error',
+            duration: 1 * 1000
+          })
+          console.log(error)
+        })
         const list = this.list // 导入数据
         const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({

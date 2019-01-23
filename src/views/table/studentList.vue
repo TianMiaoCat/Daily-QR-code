@@ -16,25 +16,25 @@
 
       <el-table-column align="center" label="序号" width="100">
         <template slot-scope="scope">
-          {{ scope.$index+1 }}
+          {{ scope.$index+(listQuery.page - 1) * listQuery.limit + 1 }}
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="学号" width="180">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.studentid }}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="211px" align="center" label="姓名">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="176">
         <template slot-scope="scope">
-          <el-button type="danger" size="small" icon="el-icon-error" @click="deleteStu(scope.row.id)">删除</el-button>
+          <el-button type="danger" size="small" icon="el-icon-error" @click="deleteStu(scope.row.studentid)">删除</el-button>
         </template>
       </el-table-column>
 
@@ -54,8 +54,9 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/table'
+import { getStudent, deleteStudent, searchStudent, newStudent } from '@/api/student'
 import Pagination from '@/components/Pagination'
+import { Message } from 'element-ui'
 
 export default {
   name: 'StudentList',
@@ -67,7 +68,7 @@ export default {
       total: 30,
       listQuery: {
         page: 1,
-        limit: 10
+        limit: 20
       },
       searchId: '',
       newStudent: {
@@ -86,9 +87,17 @@ export default {
     getList() {
       this.courseId = this.$route.params && this.$route.params.courseId
       this.listLoading = false
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
+      getStudent(this.courseId, this.listQuery.page, this.listQuery.limit).then(response => {
+        this.list = response.data.studentDTOs
+        this.total = response.data.total
         this.listLoading = false
+      }).catch(error => {
+        Message({
+          message: '获取学生失败！',
+          type: 'error',
+          duration: 1 * 1000
+        })
+        console.log(error)
       })
     },
     handleSizeChange(val) {
@@ -100,21 +109,50 @@ export default {
       this.getList()
     },
     handleFilter() {
-      // 传给后端学生id-searchId
       this.listQuery.page = 1
-      this.getList()
+      if (this.searchId === '') {
+        this.getList()
+      } else {
+        searchStudent(this.courseId, this.listQuery.page, this.listQuery.limit, this.searchId).then(response => {
+          this.list = response.data.studentDTOs
+          if (Object.keys(this.list).length === 0) {
+            this.total = 0
+          } else {
+            this.total = 1
+          }
+          this.listLoading = false
+        }).catch(error => {
+          Message({
+            message: '查询学生失败！',
+            type: 'error',
+            duration: 1 * 1000
+          })
+          console.log(error)
+        })
+      }
     },
     deleteStu(id) {
       this.deleteDialog = true
       this.studentId = id
     },
     reCancel() {
-      // 传给后端课程id-courseId，学生id-studentId
       this.deleteDialog = false
-      this.getList()
-      this.$message({
-        message: '删除成功！',
-        type: 'success'
+      deleteStudent(this.courseId, this.studentId).then(response => {
+        if (response.data) {
+          Message({
+            message: '删除成功！',
+            type: 'success',
+            duration: 1 * 1000
+          })
+          this.getList()
+        }
+      }).catch(error => {
+        Message({
+          message: '删除学生失败！',
+          type: 'error',
+          duration: 1 * 1000
+        })
+        console.log(error)
       })
     },
     addStudent() {
@@ -124,14 +162,32 @@ export default {
           type: 'error'
         })
       } else {
-        // 将学生id和姓名传给后端
-        this.getList()
-        this.$message({
-          message: '新增成功！',
-          type: 'success'
+        newStudent(this.courseId, this.listQuery.page, this.listQuery.limit, this.newStudent.newId, this.newStudent.newName).then(response => {
+          this.list = response.data.studentDTOs
+          this.total = response.data.total + 1
+          if (Object.keys(this.list).length !== 0) {
+            Message({
+              message: '添加成功！',
+              type: 'success',
+              duration: 1 * 1000
+            })
+            this.newStudent.newId = ''
+            this.newStudent.newName = ''
+          } else {
+            Message({
+              message: '添加失败！',
+              type: 'error',
+              duration: 1 * 1000
+            })
+          }
+        }).catch(error => {
+          Message({
+            message: '添加学生失败！',
+            type: 'error',
+            duration: 1 * 1000
+          })
+          console.log(error)
         })
-        this.newStudent.newId = ''
-        this.newStudent.newName = ''
       }
     }
   }
