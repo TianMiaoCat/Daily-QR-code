@@ -65,6 +65,7 @@ export default {
     return {
       courseId: 0,
       list: null,
+      filelist: null,
       listLoading: true,
       deleteDialog: false,
       signId: 0,
@@ -109,22 +110,25 @@ export default {
     },
     handleDownload() {
       this.downloadLoading = true
+      getRecord(this.courseId).then(response => {
+        this.filelist = response.data.studentSigninInfos
+        console.log(response.data.studentSigninInfos)
+        this.listLoading = false
+      }).catch(error => {
+        Message({
+          message: '获取签到记录失败！',
+          type: 'error',
+          duration: 1 * 1000
+        })
+        console.log(error)
+      })
       import('@/vendor/Export2Excel').then(excel => {
         const tHeader = ['学号', '姓名', '出勤次数']
         const filterVal = ['studentid', 'studentname', 'signintime']
-        getRecord(this.courseId).then(response => {
-          this.list = response.data.studentSigninInfos
-          this.listLoading = false
-        }).catch(error => {
-          Message({
-            message: '获取签到记录失败！',
-            type: 'error',
-            duration: 1 * 1000
-          })
-          console.log(error)
-        })
-        const list = this.list // 导入数据
+        const list = this.filelist // 导入数据
+        console.log(list)
         const data = this.formatJson(filterVal, list)
+        console.log(data)
         excel.export_json_to_excel({
           header: tHeader,
           data,

@@ -10,3 +10,14 @@ export function getRecord(courseid) {
   })
 }
 
+export function getMini(courseid, duration) {
+  return request({
+    url: '/admin/signin/create',
+    method: 'get',
+    params: {
+      courseid,
+      duration
+    }
+  })
+}
+

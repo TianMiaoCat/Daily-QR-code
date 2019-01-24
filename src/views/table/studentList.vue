@@ -12,7 +12,7 @@
       </router-link>
     </div>
 
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 64%; margin:auto">
+    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 670px; margin:auto">
 
       <el-table-column align="center" label="序号" width="100">
         <template slot-scope="scope">
@@ -32,7 +32,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="176">
+      <el-table-column align="center" label="操作" width="178">
         <template slot-scope="scope">
           <el-button type="danger" size="small" icon="el-icon-error" @click="deleteStu(scope.row.studentid)">删除</el-button>
         </template>
@@ -164,7 +164,7 @@ export default {
       } else {
         newStudent(this.courseId, this.listQuery.page, this.listQuery.limit, this.newStudent.newId, this.newStudent.newName).then(response => {
           this.list = response.data.studentDTOs
-          this.total = response.data.total + 1
+          this.total = response.data.total
           if (Object.keys(this.list).length !== 0) {
             Message({
               message: '添加成功！',
