@@ -10,14 +10,12 @@ export function getRecord(courseid) {
   })
 }
 
-export function getMini(courseid, duration) {
+export function deleteSignin(signid) {
   return request({
-    url: '/admin/signin/create',
+    url: '/admin/signinactivity/deletesigninactivity',
     method: 'get',
     params: {
-      courseid,
-      duration
+      signid
     }
   })
 }
-

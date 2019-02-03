@@ -15,23 +15,23 @@
       style="width: 80%;margin:auto">
       <el-table-column align="center" label="序号" width="100">
         <template slot-scope="scope">
-          {{ scope.$index+1 }}
+          {{ scope.row.signinid }}
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="签到时间" width="220">
         <template slot-scope="scope">
           <i class="el-icon-time"/>
-          <span>{{ scope.row.display_time }}</span>
+          <span>{{ scope.row.starttime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="出勤人数" width="130" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.pageviews }}</span>
+          <span>{{ scope.row.signinnum }}</span>
         </template>
       </el-table-column>
       <el-table-column label="缺勤人数" width="130" align="center">
         <template slot-scope="scope">
-          {{ scope.row.pageviews }}
+          {{ scope.row.studentnum - scope.row.signinnum }}
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
@@ -39,7 +39,7 @@
           <router-link :data="courseId" :to="'/course/student/' + courseId + '/' + scope.$index">
             <el-button type="success" size="small" icon="el-icon-circle-check-outline">查看详情</el-button>
           </router-link>
-          <el-button type="danger" size="small" icon="el-icon-error" @click="deleteRec(scope.$index)">删除</el-button>
+          <el-button type="danger" size="small" icon="el-icon-error" @click="deleteRec(scope.row.signinid)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -57,7 +57,7 @@
 
 <script>
 import { getSign } from '@/api/course'
-import { getRecord } from '@/api/signup'
+import { getRecord, deleteSignin } from '@/api/signup'
 import { Message } from 'element-ui'
 
 export default {
@@ -85,6 +85,10 @@ export default {
       this.listLoading = true
       getSign(this.courseId).then(response => {
         this.list = response.data
+        for (var i = 0; i < this.list.length; i++) {
+          var d = new Date(this.list[i]['starttime'])
+          this.list[i]['starttime'] = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + this.addZero(d.getHours()) + ':' + this.addZero(d.getMinutes())
+        }
         this.listLoading = false
       }).catch(error => {
         Message({
@@ -101,19 +105,30 @@ export default {
     },
     reCancel() {
       // 传给后端课程id-tempData，签到id-signId
-      this.deleteDialog = false
-      this.fetchData()
-      this.$message({
-        message: '删除成功！',
-        type: 'success'
+      deleteSignin(this.signId).then(response => {
+        if (response.data) {
+          this.deleteDialog = false
+          this.fetchData()
+          Message({
+            message: '删除成功！',
+            type: 'success',
+            duration: 1 * 1000
+          })
+        }
+      }).catch(error => {
+        Message({
+          message: '获取签到记录失败！',
+          type: 'error',
+          duration: 1 * 1000
+        })
+        console.log(error)
       })
     },
     handleDownload() {
       this.downloadLoading = true
       getRecord(this.courseId).then(response => {
         this.filelist = response.data.studentSigninInfos
-        console.log(response.data.studentSigninInfos)
-        this.listLoading = false
+        // console.log(response.data.studentSigninInfos)
       }).catch(error => {
         Message({
           message: '获取签到记录失败！',
@@ -126,9 +141,9 @@ export default {
         const tHeader = ['学号', '姓名', '出勤次数']
         const filterVal = ['studentid', 'studentname', 'signintime']
         const list = this.filelist // 导入数据
-        console.log(list)
+        // console.log(list)
         const data = this.formatJson(filterVal, list)
-        console.log(data)
+        // console.log(data)
         excel.export_json_to_excel({
           header: tHeader,
           data,
@@ -141,6 +156,13 @@ export default {
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]))
+    },
+    addZero(val) {
+      if (val < 10) {
+        return '0' + val
+      } else {
+        return val
+      }
     }
   }
 }

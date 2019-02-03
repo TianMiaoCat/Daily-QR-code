@@ -34,17 +34,18 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
     <el-dialog :visible.sync="dialogFormVisible" title="时间设定" >
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="170px" style="width: 280px; margin-left:10px;">
-        <el-form-item label="请设定二维码有效时间" prop="time">
-          <el-select v-model="temp.time" placeholder="" style="width: 80px">
+      <el-form ref="temp" :rules="rules" :model="temp" label-position="left" label-width="170px" style="width: 280px; margin-left:10px;">
+        <el-form-item label="请设定二维码有效时间">
+          <el-select v-model="temp.time" placeholder="2" style="width: 80px" prop="time" clearable>
             <el-option label="2" value="2"/>
             <el-option label="3" value="3"/>
+            <el-option label="5" value="5"/>
           </el-select>   min
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="primary">确认</el-button>
+        <el-button type="primary" @click="getImage">确认</el-button>
       </div>
     </el-dialog>
 
@@ -54,6 +55,14 @@
         <el-button @click="deleteDialog = false">取消</el-button>
         <el-button type="primary" @click="reCancel">确认</el-button>
       </div>
+    </el-dialog>
+
+    <el-dialog :visible.sync="imageDialog" title="二维码签到" width="38%">
+      <el-form>
+        <el-form-item>
+          <span><img :src="imageUrl"></span>
+        </el-form-item>
+      </el-form>
     </el-dialog>
 
   </div>
@@ -68,6 +77,13 @@ export default {
   name: 'CourseList',
   components: { Pagination },
   data() {
+    const validateTime = (rule, value, callback) => {
+      if (value.length <= 0) {
+        callback(new Error('请设置有效时间'))
+      } else {
+        callback()
+      }
+    }
     return {
       list: null,
       total: 30,
@@ -77,14 +93,17 @@ export default {
         limit: 20
       },
       temp: {
-        time: ''
+        time: 2,
+        signCourse: 0
       },
       rules: {
-        time: [{ required: true, message: '请设置有效时间', trigger: 'blur' }]
+        time: [{ required: true, trigger: 'blur', validator: validateTime }]
       },
       dialogFormVisible: false,
       deleteDialog: false,
-      tempData: 0
+      imageDialog: false,
+      tempData: 0,
+      imageUrl: ''
     }
   },
   created() {
@@ -116,9 +135,7 @@ export default {
     },
     handleUpdate(id) {
       this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+      this.temp.signCourse = id
     },
     deleteCourse(id) {
       this.deleteDialog = true
@@ -143,6 +160,21 @@ export default {
         })
         console.log(error)
       })
+    },
+    getImage() {
+      this.dialogFormVisible = false
+      // console.log(this.temp.time)
+      const url = 'http://localhost:9529/apis/admin/signin/create?courseid=' + this.temp.signCourse + '&duration=' + this.temp.time
+      this.imageUrl = url
+      console.log(url)
+      this.imageDialog = true
+      if (this.imageDialog) {
+        setTimeout(() => this.change(), this.temp.time * 60 * 1000)
+      }
+      this.temp.time = 2
+    },
+    change() {
+      this.imageDialog = false
     }
   }
 }
