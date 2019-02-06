@@ -147,20 +147,6 @@ export default {
         })
         console.log(error)
       })
-    },
-    add(row) {
-      row.status = 1
-      this.$message({
-        message: '补签成功',
-        type: 'success'
-      })
-    },
-    reset(row) {
-      row.status = 0
-      this.$message({
-        message: '重置成功',
-        type: 'success'
-      })
     }
   }
 }

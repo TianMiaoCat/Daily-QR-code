@@ -157,9 +157,11 @@ export default {
     },
     handleSuccess({ results, header }) {
       // // console.log(JSON.parse(JSON.stringify(results)))
+      this.tableData = []
       for (var j = 0; j < 10; j++) {
-        this.tableData[j] = results[j]
+        this.tableData.push(results[j])
       }
+      // this.tableData = results
       results = JSON.parse(JSON.stringify(results))
       for (var i = 0; i < results.length; i++) {
         results[i]['studentid'] = results[i]['学号']
@@ -169,7 +171,7 @@ export default {
         delete results[i]['姓名']
       }
       this.student = results
-      console.log(this.student)
+      console.log(this.tableData)
       // console.log(JSON.stringify(this.student))
       // this.student = JSON.stringify(this.student)
       this.tableHeader = header

@@ -90,8 +90,8 @@ export default {
 
 <style scoped>
 .pagination-container {
-  background: #fff;
-  padding-left: 55%;
+  background: #ffffff;
+  padding-left: 52%;
   padding-top: 30px
 }
 .pagination-container.hidden {
