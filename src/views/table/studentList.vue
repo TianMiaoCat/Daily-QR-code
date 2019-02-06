@@ -65,7 +65,7 @@ export default {
     return {
       list: null,
       listLoading: true,
-      total: 30,
+      total: 0,
       listQuery: {
         page: 1,
         limit: 20

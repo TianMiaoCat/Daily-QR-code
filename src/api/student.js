@@ -49,3 +49,30 @@ export function newStudent(courseid, page, limit, newid, newname) {
     }
   })
 }
+
+export function getStatus(courseid, signinid, page, limit, studentid, status) {
+  return request({
+    url: '/admin/signin/getsignins',
+    method: 'post',
+    data: {
+      courseid,
+      signinid,
+      page,
+      limit,
+      studentid,
+      status
+    }
+  })
+}
+
+export function changeStatus(courseid, signinid, studentid) {
+  return request({
+    url: '/admin/signin/resetsignin',
+    method: 'get',
+    params: {
+      courseid,
+      signinid,
+      studentid
+    }
+  })
+}

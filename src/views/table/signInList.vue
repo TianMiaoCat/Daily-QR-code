@@ -36,7 +36,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <router-link :data="courseId" :to="'/course/student/' + courseId + '/' + scope.$index">
+          <router-link :data="courseId" :to="'/course/student/' + courseId + '/' + scope.row.signinid">
             <el-button type="success" size="small" icon="el-icon-circle-check-outline">查看详情</el-button>
           </router-link>
           <el-button type="danger" size="small" icon="el-icon-error" @click="deleteRec(scope.row.signinid)">删除</el-button>
@@ -128,7 +128,23 @@ export default {
       this.downloadLoading = true
       getRecord(this.courseId).then(response => {
         this.filelist = response.data.studentSigninInfos
-        // console.log(response.data.studentSigninInfos)
+        console.log(this.filelist)
+        import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = ['学号', '姓名', '出勤次数']
+          const filterVal = ['studentid', 'studentname', 'signintime']
+          const list = this.filelist // 导入数据
+          console.log(list)
+          const data = this.formatJson(filterVal, list)
+          // console.log(data)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: this.filename,
+            autoWidth: this.autoWidth,
+            bookType: this.bookType
+          })
+          this.downloadLoading = false
+        })
       }).catch(error => {
         Message({
           message: '获取签到记录失败！',
@@ -136,22 +152,6 @@ export default {
           duration: 1 * 1000
         })
         console.log(error)
-      })
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['学号', '姓名', '出勤次数']
-        const filterVal = ['studentid', 'studentname', 'signintime']
-        const list = this.filelist // 导入数据
-        // console.log(list)
-        const data = this.formatJson(filterVal, list)
-        // console.log(data)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: this.filename,
-          autoWidth: this.autoWidth,
-          bookType: this.bookType
-        })
-        this.downloadLoading = false
       })
     },
     formatJson(filterVal, jsonData) {
