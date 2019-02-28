@@ -164,7 +164,7 @@ export default {
     getImage() {
       this.dialogFormVisible = false
       // console.log(this.temp.time)
-      const url = 'http://localhost:9528/apis/admin/signin/create?courseid=' + this.temp.signCourse + '&duration=' + this.temp.time
+      const url = 'https://qr.nobler.xyz/apis/admin/signin/create?courseid=' + this.temp.signCourse + '&duration=' + this.temp.time
       this.imageUrl = url
       console.log(url)
       this.imageDialog = true
