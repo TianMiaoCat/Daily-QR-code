@@ -68,31 +68,37 @@ export default {
     }
   },
   methods: {
+    //提交信息合法校验
     onSubmit() {
       if (this.form.name === '') {
-        this.$message({
+        Message({
           message: '课程名称不能为空！',
-          type: 'error'
+          type: 'error',
+          duration: 1 * 1000
         })
       } else if (this.form.term === '') {
-        this.$message({
+        Message({
           message: '开课时间不能为空！',
-          type: 'error'
+          type: 'error',
+          duration: 1 * 1000
         })
       } else if (Object.keys(this.tableHeader).length === 0) {
-        this.$message({
+        Message({
           message: '请导入学生名单后再创建课程！',
-          type: 'error'
+          type: 'error',
+          duration: 1 * 1000
         })
       } else if (Object.keys(this.tableHeader).length !== 2 || this.tableHeader[0].trim() !== '学号' || this.tableHeader[1].trim() !== '姓名') {
-        this.$message({
+        Message({
           message: '文件内容只能包含以“学号”和“姓名”为首行的两列！',
-          type: 'error'
+          type: 'error',
+          duration: 1 * 1000
         })
       } else {
         this.dialogFormVisible = true
       }
     },
+    //发送请求新增课程信息+上传学生名单
     reSubmit() {
       this.dialogFormVisible = false
       // console.log(JSON.parse(JSON.stringify(this.form)))
@@ -102,9 +108,10 @@ export default {
           this.courseid = response.data.courseid
           submitExcel(this.courseid, this.student).then(response => {
             if (response.data) {
-              this.$message({
+              Message({
                 message: '添加课程成功!',
-                type: 'seccess'
+                type: 'success',
+                duration: 3 * 1000
               })
               this.reCancel()
             }
@@ -117,9 +124,10 @@ export default {
             console.log(error)
           })
         } else {
-          this.$message({
+          Message({
             message: '添加失败！',
-            type: 'error'
+            type: 'error',
+            duration: 1 * 1000
           })
         }
       }).catch(error => {
@@ -149,12 +157,14 @@ export default {
         return true
       }
 
-      this.$message({
+      Message({
         message: '文件大小不能超过1M.',
-        type: 'warning'
+        type: 'warning',
+        duration: 1 * 1000
       })
       return false
     },
+    //上传学生名单
     handleSuccess({ results, header }) {
       // // console.log(JSON.parse(JSON.stringify(results)))
       this.tableData = []

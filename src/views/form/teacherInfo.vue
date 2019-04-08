@@ -65,6 +65,7 @@ export default {
   },
   methods: {
     get() {
+      //获取教师信息请求
       getInfo().then(response => {
         this.form.name = response.data.name
         this.form.phone = response.data.phonenum
@@ -87,6 +88,7 @@ export default {
       this.form.phone = this.temp.phone
       this.form.address = this.temp.address
     },
+    //修改教师信息请求
     reSubmit() {
       this.dialogFormVisible = false
       // console.log(JSON.parse(JSON.stringify(this.form)))
@@ -94,7 +96,11 @@ export default {
       if (this.form.newPassword !== null) {
         submitInfo(this.form.name, this.form.newPassword, this.form.phone, this.form.address).then(response => {
           if (response.data.name) {
-            this.$message('修改成功！请重新登录')
+            Message({
+              message: '修改成功！请重新登录',
+              type: 'success',
+              duration: 2 * 1000
+            })
             this.$store.dispatch('LogOut').then(() => {
               location.reload() // 为了重新实例化vue-router对象 避免bug
             })
@@ -103,7 +109,7 @@ export default {
           Message({
             message: '修改失败！密码不能少于10位',
             type: 'error',
-            duration: 1 * 1000
+            duration: 2 * 1000
           })
           console.log(error)
           this.onCancel()
@@ -111,7 +117,11 @@ export default {
       } else {
         submitInfoNo(this.form.name, this.form.phone, this.form.address).then(response => {
           if (response.data.name) {
-            this.$message('修改成功！')
+            Message({
+              message: '修改成功!',
+              type: 'success',
+              duration: 2 * 1000
+            })
             this.get()
           }
         })

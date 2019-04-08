@@ -87,6 +87,7 @@ export default {
     getList() {
       this.courseId = this.$route.params && this.$route.params.courseId
       this.listLoading = false
+      //获取课程学生名单
       getStudent(this.courseId, this.listQuery.page, this.listQuery.limit).then(response => {
         this.list = response.data.studentDTOs
         this.total = response.data.total
@@ -113,6 +114,7 @@ export default {
       if (this.searchId === '') {
         this.getList()
       } else {
+        //查找学生
         searchStudent(this.courseId, this.listQuery.page, this.listQuery.limit, this.searchId).then(response => {
           this.list = response.data.studentDTOs
           if (Object.keys(this.list).length === 0) {
@@ -137,6 +139,7 @@ export default {
     },
     reCancel() {
       this.deleteDialog = false
+      //删除学生
       deleteStudent(this.courseId, this.studentId).then(response => {
         if (response.data) {
           Message({
@@ -155,6 +158,7 @@ export default {
         console.log(error)
       })
     },
+    //新增学生
     addStudent() {
       if (this.newStudent.newId === '' || this.newStudent.newName === '') {
         this.$message({

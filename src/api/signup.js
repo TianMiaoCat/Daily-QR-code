@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+//导出签到表
 export function getRecord(courseid) {
   return request({
     url: '/admin/signinactivity/export',
@@ -10,6 +11,7 @@ export function getRecord(courseid) {
   })
 }
 
+//删除签到记录
 export function deleteSignin(signid) {
   return request({
     url: '/admin/signinactivity/deletesigninactivity',

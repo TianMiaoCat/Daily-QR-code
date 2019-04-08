@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+//登录
 export function login(username, password) {
   return request({
     url: '/login',
@@ -11,6 +12,7 @@ export function login(username, password) {
   })
 }
 
+//注册
 export function signup(username, password) {
   return request({
     url: '/signup',
@@ -22,14 +24,7 @@ export function signup(username, password) {
   })
 }
 
-// export function getInfo(token) {
-//   return request({
-//     url: '/user/info',
-//     method: 'get',
-//     params: { token }
-//   })
-// }
-
+//退出系统
 export function logout() {
   return request({
     url: '/quit',

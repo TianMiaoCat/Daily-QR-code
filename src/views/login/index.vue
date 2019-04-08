@@ -91,7 +91,7 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!isNumber(value)) {
-        callback(new Error('请输入正确的10位工号'))
+        callback(new Error('请输入正确的5位工号'))
       } else {
         callback()
       }

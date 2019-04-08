@@ -83,6 +83,7 @@ export default {
       this.courseId = this.$route.params && this.$route.params.id
       console.log(this.courseId)
       this.listLoading = true
+      //获取签到记录列表
       getSign(this.courseId).then(response => {
         this.list = response.data
         for (var i = 0; i < this.list.length; i++) {
@@ -104,6 +105,7 @@ export default {
       this.signId = id
     },
     reCancel() {
+      //删除签到记录
       // 传给后端课程id-tempData，签到id-signId
       deleteSignin(this.signId).then(response => {
         if (response.data) {
@@ -126,6 +128,7 @@ export default {
     },
     handleDownload() {
       this.downloadLoading = true
+      //导出签到表
       getRecord(this.courseId).then(response => {
         this.filelist = response.data.studentSigninInfos
         console.log(this.filelist)

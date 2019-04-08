@@ -7,6 +7,7 @@
 </template>
 
 <script>
+//引入Box组件
 import BoxCard from './components/BoxCard'
 
 export default {

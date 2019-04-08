@@ -7,10 +7,11 @@ export function isvalidUsername(str) {
   return valid_map.indexOf(str.trim()) >= 0
 }
 
+/* 5位数字*/
 export function isNumber(str) {
   const result = /^\d+$/.test(str)
   if (result) {
-    if (str.length === 10) {
+    if (str.length === 5) {
       return true
     } else return false
   }

@@ -63,6 +63,7 @@ export default {
     this.showTime()
   },
   methods: {
+    //显示实际的日期及学期
     showTime() {
       var date = new Date()
       var year = date.getFullYear()
@@ -76,6 +77,7 @@ export default {
         this.num = 2
       }
       console.log(this.$store.getters.name)
+      //获取教师信息请求
       getInfo().then(response => {
         // console.log(response.data)
         this.name = response.data.name

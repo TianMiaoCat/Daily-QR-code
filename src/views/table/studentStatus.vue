@@ -94,6 +94,7 @@ export default {
       this.listLoading = false
       this.listQuery.searchId = null
       this.listQuery.status = null
+      //获取学生出勤详情
       getStatus(this.courseId, this.signId, this.listQuery.page, this.listQuery.limit, this.listQuery.searchId, this.listQuery.status).then(response => {
         if (response.data) {
           this.list = response.data.signins
@@ -135,6 +136,7 @@ export default {
       this.getList()
     },
     handleStatusChange(row) {
+      //更改学生出勤状态
       changeStatus(this.courseId, this.signId, row.studentid).then(response => {
         if (response.data) {
           this.getList()

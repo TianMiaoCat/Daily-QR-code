@@ -37,6 +37,7 @@
       <el-form ref="temp" :rules="rules" :model="temp" label-position="left" label-width="170px" style="width: 280px; margin-left:10px;">
         <el-form-item label="请设定二维码有效时间">
           <el-select v-model="temp.time" placeholder="2" style="width: 80px" prop="time" clearable>
+            <el-option label="1" value="1"/>
             <el-option label="2" value="2"/>
             <el-option label="3" value="3"/>
             <el-option label="5" value="5"/>
@@ -110,6 +111,7 @@ export default {
     this.getList()
   },
   methods: {
+    //获取课程列表
     getList() {
       this.listLoading = true
       getCourse(this.listQuery.page, this.listQuery.limit).then(response => {
@@ -141,6 +143,7 @@ export default {
       this.deleteDialog = true
       this.tempData = id
     },
+    //删除课程
     reCancel() {
       this.deleteDialog = false
       deleteCourse(this.tempData).then(response => {
@@ -161,10 +164,12 @@ export default {
         console.log(error)
       })
     },
+    //获取签到二维码
     getImage() {
       this.dialogFormVisible = false
       // console.log(this.temp.time)
-      const url = 'https://qr.nobler.xyz/apis/admin/signin/create?courseid=' + this.temp.signCourse + '&duration=' + this.temp.time
+      //本地运行时填localhost，部署到服务器上时要改成服务器域名
+      const url = 'http://localhost:9528/apis/admin/signin/create?courseid=' + this.temp.signCourse + '&duration=' + this.temp.time
       this.imageUrl = url
       console.log(url)
       this.imageDialog = true

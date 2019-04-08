@@ -30,11 +30,11 @@ const user = {
     // 登录
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
+      // var messageshow
       // console.log(username)
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
           const data = response.data
-          // console.log(response)
           commit('SET_NAME', data.username)
           commit('SET_TOKEN', data.username)
           resolve(response)

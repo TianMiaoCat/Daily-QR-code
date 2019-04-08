@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+//获取学生名单列表
 export function getStudent(courseid, page, limit) {
   return request({
     url: '/admin/course/getstudents',
@@ -12,6 +13,7 @@ export function getStudent(courseid, page, limit) {
   })
 }
 
+//删除学生
 export function deleteStudent(courseid, studentid) {
   return request({
     url: '/admin/course/deletestudent',
@@ -23,6 +25,7 @@ export function deleteStudent(courseid, studentid) {
   })
 }
 
+//查找学生
 export function searchStudent(courseid, page, limit, studentid) {
   return request({
     url: '/admin/course/getstudents',
@@ -36,6 +39,7 @@ export function searchStudent(courseid, page, limit, studentid) {
   })
 }
 
+//新增学生
 export function newStudent(courseid, page, limit, newid, newname) {
   return request({
     url: '/admin/course/getstudents',
@@ -50,6 +54,7 @@ export function newStudent(courseid, page, limit, newid, newname) {
   })
 }
 
+//获取学生出勤详情
 export function getStatus(courseid, signinid, page, limit, studentid, status) {
   return request({
     url: '/admin/signin/getsignins',
@@ -65,6 +70,7 @@ export function getStatus(courseid, signinid, page, limit, studentid, status) {
   })
 }
 
+//更改学生出勤状态
 export function changeStatus(courseid, signinid, studentid) {
   return request({
     url: '/admin/signin/resetsignin',
